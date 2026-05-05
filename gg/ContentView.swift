@@ -13,7 +13,7 @@ import AdSupport
 
 struct ContentView: View {
     @State private var idfa: String = "—"
-    @State private var status: String = "Henüz istenmedi"
+    @State private var status: String = "Not requested yet"
 
     var body: some View {
         VStack(spacing: 16) {
@@ -28,11 +28,11 @@ struct ContentView: View {
                 .multilineTextAlignment(.center)
                 .textSelection(.enabled)
 
-            Text("Durum: \(status)")
+            Text("Status: \(status)")
                 .font(.caption)
                 .foregroundStyle(.secondary)
 
-            Button("İzin İste & IDFA Al") {
+            Button("Request Permission & Get IDFA") {
                 Task { await requestIDFA() }
             }
             .buttonStyle(.borderedProminent)
@@ -48,24 +48,24 @@ struct ContentView: View {
         case .authorized:
             let id = ASIdentifierManager.shared().advertisingIdentifier
             idfa = id.uuidString
-            status = "İzin verildi"
+            status = "Authorized"
             print("IDFA:", id.uuidString)
         case .denied:
             idfa = "—"
-            status = "İzin reddedildi (IDFA hep sıfır döner)"
-            print("İzin verilmedi, IDFA hep sıfır döner.")
+            status = "Denied (IDFA will always return zeros)"
+            print("Permission denied, IDFA will always return zeros.")
         case .restricted:
             idfa = "—"
-            status = "Kısıtlanmış"
+            status = "Restricted"
         case .notDetermined:
             idfa = "—"
-            status = "Henüz belirlenmedi"
+            status = "Not determined"
         @unknown default:
             idfa = "—"
-            status = "Bilinmeyen durum"
+            status = "Unknown status"
         }
         #else
-        status = "Bu platformda IDFA desteklenmiyor"
+        status = "IDFA is not supported on this platform"
         #endif
     }
 }

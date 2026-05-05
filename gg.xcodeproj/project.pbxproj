@@ -255,7 +255,7 @@
 				ENABLE_USER_SELECTED_FILES = readonly;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_CFBundleDisplayName = "IDFA Finder";
-				INFOPLIST_KEY_NSUserTrackingUsageDescription = "Reklamları kişiselleştirmek ve uygulama deneyimini geliştirmek için cihaz reklam tanımlayıcısına (IDFA) erişim izni gerekiyor.";
+				INFOPLIST_KEY_NSUserTrackingUsageDescription = "We need access to your device's advertising identifier (IDFA) to personalize ads and improve your app experience.";
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphoneos*]" = YES;
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphonesimulator*]" = YES;
 				"INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents[sdk=iphoneos*]" = YES;
@@ -301,7 +301,7 @@
 				ENABLE_USER_SELECTED_FILES = readonly;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_CFBundleDisplayName = "IDFA Finder";
-				INFOPLIST_KEY_NSUserTrackingUsageDescription = "Reklamları kişiselleştirmek ve uygulama deneyimini geliştirmek için cihaz reklam tanımlayıcısına (IDFA) erişim izni gerekiyor.";
+				INFOPLIST_KEY_NSUserTrackingUsageDescription = "We need access to your device's advertising identifier (IDFA) to personalize ads and improve your app experience.";
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphoneos*]" = YES;
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphonesimulator*]" = YES;
 				"INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents[sdk=iphoneos*]" = YES;

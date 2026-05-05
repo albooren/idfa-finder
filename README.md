@@ -1,23 +1,31 @@
-# IDFA Finder
+# IDFA Finder — Get the IDFA on iOS with App Tracking Transparency (Swift / SwiftUI)
 
-A minimal SwiftUI iOS app that requests App Tracking Transparency (ATT) authorization and displays the device's IDFA (Identifier for Advertisers).
+[![Platform](https://img.shields.io/badge/platform-iOS%2026.2%2B-blue)](https://developer.apple.com/ios/)
+[![Swift](https://img.shields.io/badge/Swift-5.9%2B-orange)](https://swift.org)
+[![License](https://img.shields.io/badge/license-MIT-green)](#license)
 
-## What It Does
+A minimal open-source **SwiftUI** iOS sample that requests **App Tracking Transparency (ATT)** authorization and displays the device's **IDFA** (Identifier for Advertisers / `advertisingIdentifier`).
 
-- Prompts the user with the system ATT permission dialog on launch
-- Displays the IDFA UUID when permission is granted
-- Reports status for `denied` / `restricted` / `notDetermined` cases
-- Lets you copy the IDFA via long-press (text selection enabled)
-- Includes a button to re-trigger the request flow
+Use this repo as a copy-paste reference for integrating **`ATTrackingManager`** and **`ASIdentifierManager`** in any Swift / SwiftUI iOS app.
+
+## Features
+
+- Request ATT permission with `ATTrackingManager.requestTrackingAuthorization`
+- Read the IDFA via `ASIdentifierManager.shared().advertisingIdentifier`
+- Modern Swift `async/await` wrapper around the ATT callback API
+- Handles all four ATT statuses: `authorized`, `denied`, `restricted`, `notDetermined`
+- Cross-platform safe — guarded with `#if canImport(AppTrackingTransparency)` so it builds for macOS / visionOS targets too
+- `NSUserTrackingUsageDescription` configured via `INFOPLIST_KEY_*` (no separate `Info.plist` file needed with `GENERATE_INFOPLIST_FILE = YES`)
+- SwiftUI UI with selectable IDFA text for easy copy
 
 ## Requirements
 
 - Xcode 26.2+
 - iOS 26.2+ deployment target
-- A real device for a real IDFA (Simulator returns a synthetic value)
-- A development team for code signing if running on device
+- Real device for a real IDFA (Simulator returns a synthetic UUID)
+- Apple Developer account / team for code signing on device
 
-## Setup
+## Quick Start
 
 ```bash
 git clone https://github.com/albooren/idfa-finder.git
@@ -25,22 +33,65 @@ cd idfa-finder
 open gg.xcodeproj
 ```
 
-Set your development team in the target's Signing & Capabilities tab, then run on a device.
+Set your development team in **Signing & Capabilities**, then run on a real iPhone or iPad.
 
-## How It Works
+## How to Request ATT Permission and Read IDFA in Swift
 
-The app uses `ATTrackingManager.requestTrackingAuthorization` (wrapped in an async helper) to ask the user for tracking permission, then reads `ASIdentifierManager.shared().advertisingIdentifier` if the status is `.authorized`.
+The complete flow lives in `gg/ContentView.swift`. The relevant snippet:
 
-`NSUserTrackingUsageDescription` is configured via `INFOPLIST_KEY_*` build settings — the project uses `GENERATE_INFOPLIST_FILE = YES`, so there is no separate `Info.plist` file.
+```swift
+import AppTrackingTransparency
+import AdSupport
 
-`AppTrackingTransparency` and `AdSupport` are guarded with `#if canImport(...)` because the project also targets macOS, where ATT is unavailable.
+let status = await ATTrackingManager.requestTrackingAuthorization()
 
-## Notes
+switch status {
+case .authorized:
+    let idfa = ASIdentifierManager.shared().advertisingIdentifier
+    print("IDFA:", idfa.uuidString)
+case .denied, .restricted, .notDetermined:
+    print("IDFA unavailable — returns all zeros")
+@unknown default:
+    break
+}
+```
 
-- ATT shows the system dialog **once per install**. If the user denies, they must enable tracking from Settings → Privacy & Security → Tracking → IDFA Finder.
-- Without authorization, IDFA returns `00000000-0000-0000-0000-000000000000`.
-- On a Simulator, IDFA may not reflect a real device identifier.
+`ATTrackingManager.requestTrackingAuthorization` ships only with a completion-handler API; this project wraps it in `withCheckedContinuation` for an `async` call site.
+
+## How to Add `NSUserTrackingUsageDescription`
+
+Without this key the ATT system dialog never appears and the App Store rejects the build. This repo sets it through the build settings (because `GENERATE_INFOPLIST_FILE = YES` means there's no manual `Info.plist`):
+
+```
+INFOPLIST_KEY_NSUserTrackingUsageDescription = "We need access to your device's advertising identifier (IDFA) to personalize ads and improve your app experience.";
+```
+
+If your project uses a manual `Info.plist`, add the same key/value there instead.
+
+## Notes on iOS IDFA Behavior
+
+- ATT shows the system prompt **only once per install**. After a denial, users must enable tracking in **Settings → Privacy & Security → Tracking**.
+- When tracking is not authorized, `advertisingIdentifier` returns `00000000-0000-0000-0000-000000000000`.
+- IDFA values on the iOS Simulator are not real device identifiers.
+- macOS native builds skip ATT entirely via the `canImport` guard.
+
+## Project Structure
+
+```
+gg/
+├── ggApp.swift          # @main SwiftUI App entry
+└── ContentView.swift    # ATT + IDFA logic and UI
+gg.xcodeproj/            # Xcode project (auto-generated Info.plist)
+```
+
+## Keywords
+
+iOS, Swift, SwiftUI, IDFA, advertising identifier, App Tracking Transparency, ATT, ATTrackingManager, ASIdentifierManager, AdSupport, advertisingIdentifier, privacy permission, NSUserTrackingUsageDescription, async/await, open source iOS sample.
+
+## Contributing
+
+Issues and pull requests welcome. If this sample helped you, a star on the repo helps others discover it.
 
 ## License
 
-MIT
+MIT. See [LICENSE](LICENSE) — free for personal and commercial use.

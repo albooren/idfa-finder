@@ -1,6 +1,6 @@
 //
 //  ContentView.swift
-//  gg
+//  IDFAFinder
 //
 //  Created by AlperenKişi on 5/5/26.
 //

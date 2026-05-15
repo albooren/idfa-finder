@@ -30,14 +30,14 @@ Use this repo as a copy-paste reference for integrating **`ATTrackingManager`** 
 ```bash
 git clone https://github.com/albooren/idfa-finder.git
 cd idfa-finder
-open gg.xcodeproj
+open IDFAFinder.xcodeproj
 ```
 
 Set your development team in **Signing & Capabilities**, then run on a real iPhone or iPad.
 
 ## How to Request ATT Permission and Read IDFA in Swift
 
-The complete flow lives in `gg/ContentView.swift`. The relevant snippet:
+The complete flow lives in `IDFAFinder/ContentView.swift`. The relevant snippet:
 
 ```swift
 import AppTrackingTransparency
@@ -78,10 +78,10 @@ If your project uses a manual `Info.plist`, add the same key/value there instead
 ## Project Structure
 
 ```
-gg/
-├── ggApp.swift          # @main SwiftUI App entry
+IDFAFinder/
+├── IDFAFinderApp.swift  # @main SwiftUI App entry
 └── ContentView.swift    # ATT + IDFA logic and UI
-gg.xcodeproj/            # Xcode project (auto-generated Info.plist)
+IDFAFinder.xcodeproj/    # Xcode project (auto-generated Info.plist)
 ```
 
 ## Keywords
